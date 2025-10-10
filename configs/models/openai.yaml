@@ -1,0 +1,87 @@
+# OpenAI model configuration
+# Configuration for OpenAI models (GPT-4, GPT-3.5, etc.)
+
+provider: "openai"
+base_url: "https://api.openai.com/v1"
+api_key_env: "OPENAI_API_KEY"  # Environment variable name for API key
+
+# Model configurations
+models:
+  gpt-4o:
+    name: "gpt-4o"
+    max_tokens: 4096
+    temperature: 0.7
+    top_p: 1.0
+    frequency_penalty: 0.0
+    presence_penalty: 0.0
+    timeout_seconds: 60
+    cost_per_1k_tokens: 0.03  # Approximate cost in USD
+    
+  gpt-4o-mini:
+    name: "gpt-4o-mini"
+    max_tokens: 4096
+    temperature: 0.7
+    top_p: 1.0
+    frequency_penalty: 0.0
+    presence_penalty: 0.0
+    timeout_seconds: 30
+    cost_per_1k_tokens: 0.0015  # Approximate cost in USD
+    
+  gpt-4-turbo:
+    name: "gpt-4-turbo"
+    max_tokens: 4096
+    temperature: 0.7
+    top_p: 1.0
+    frequency_penalty: 0.0
+    presence_penalty: 0.0
+    timeout_seconds: 60
+    cost_per_1k_tokens: 0.01  # Approximate cost in USD
+    
+  gpt-3.5-turbo:
+    name: "gpt-3.5-turbo"
+    max_tokens: 4096
+    temperature: 0.7
+    top_p: 1.0
+    frequency_penalty: 0.0
+    presence_penalty: 0.0
+    timeout_seconds: 30
+    cost_per_1k_tokens: 0.002  # Approximate cost in USD
+
+# Default model settings
+defaults:
+  model: "gpt-4o-mini"
+  max_tokens: 1000
+  temperature: 0.7
+  timeout_seconds: 30
+
+# Rate limiting
+rate_limits:
+  requests_per_minute: 60
+  tokens_per_minute: 150000
+  requests_per_day: 10000
+
+# Retry settings
+retry:
+  max_retries: 3
+  backoff_factor: 2.0
+  retry_on_status_codes: [429, 500, 502, 503, 504]
+
+# Embedding models
+embeddings:
+  text-embedding-ada-002:
+    name: "text-embedding-ada-002"
+    dimensions: 1536
+    cost_per_1k_tokens: 0.0001
+    timeout_seconds: 30
+    
+  text-embedding-3-small:
+    name: "text-embedding-3-small"
+    dimensions: 1536
+    cost_per_1k_tokens: 0.00002
+    timeout_seconds: 30
+    
+  text-embedding-3-large:
+    name: "text-embedding-3-large"
+    dimensions: 3072
+    cost_per_1k_tokens: 0.00013
+    timeout_seconds: 30

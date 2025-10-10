@@ -1,0 +1,81 @@
+# Together AI model configuration
+# Configuration for Together AI models (Llama, Mistral, etc.)
+
+provider: "together"
+base_url: "https://api.together.xyz/v1"
+api_key_env: "TOGETHER_API_KEY"  # Environment variable name for API key
+
+# Model configurations
+models:
+  meta-llama/Llama-2-7b-chat-hf:
+    name: "meta-llama/Llama-2-7b-chat-hf"
+    max_tokens: 4096
+    temperature: 0.7
+    top_p: 0.9
+    frequency_penalty: 0.0
+    presence_penalty: 0.0
+    timeout_seconds: 60
+    cost_per_1k_tokens: 0.0002  # Approximate cost in USD
+    
+  meta-llama/Llama-2-13b-chat-hf:
+    name: "meta-llama/Llama-2-13b-chat-hf"
+    max_tokens: 4096
+    temperature: 0.7
+    top_p: 0.9
+    frequency_penalty: 0.0
+    presence_penalty: 0.0
+    timeout_seconds: 90
+    cost_per_1k_tokens: 0.0003  # Approximate cost in USD
+    
+  mistralai/Mistral-7B-Instruct-v0.1:
+    name: "mistralai/Mistral-7B-Instruct-v0.1"
+    max_tokens: 4096
+    temperature: 0.7
+    top_p: 0.9
+    frequency_penalty: 0.0
+    presence_penalty: 0.0
+    timeout_seconds: 60
+    cost_per_1k_tokens: 0.0002  # Approximate cost in USD
+    
+  NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO:
+    name: "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO"
+    max_tokens: 4096
+    temperature: 0.7
+    top_p: 0.9
+    frequency_penalty: 0.0
+    presence_penalty: 0.0
+    timeout_seconds: 120
+    cost_per_1k_tokens: 0.0006  # Approximate cost in USD
+
+# Default model settings
+defaults:
+  model: "meta-llama/Llama-2-7b-chat-hf"
+  max_tokens: 1000
+  temperature: 0.7
+  timeout_seconds: 60
+
+# Rate limiting
+rate_limits:
+  requests_per_minute: 30
+  tokens_per_minute: 100000
+  requests_per_day: 5000
+
+# Retry settings
+retry:
+  max_retries: 3
+  backoff_factor: 2.0
+  retry_on_status_codes: [429, 500, 502, 503, 504]
+
+# Embedding models
+embeddings:
+  togethercomputer/m2-bert-80M-8k-retrieval:
+    name: "togethercomputer/m2-bert-80M-8k-retrieval"
+    dimensions: 768
+    cost_per_1k_tokens: 0.0001
+    timeout_seconds: 30
+    
+  sentence-transformers/all-MiniLM-L6-v2:
+    name: "sentence-transformers/all-MiniLM-L6-v2"
+    dimensions: 384
+    cost_per_1k_tokens: 0.00005
+    timeout_seconds: 30

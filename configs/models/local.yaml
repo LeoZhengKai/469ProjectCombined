@@ -1,0 +1,122 @@
+# Local model configuration
+# Configuration for local models (Gemma, Llama, etc.)
+
+provider: "local"
+base_url: "http://localhost:8000"  # Local inference server URL
+api_key_env: null  # No API key needed for local models
+
+# Model configurations
+models:
+  gemma-2b:
+    name: "gemma-2b"
+    max_tokens: 2048
+    temperature: 0.7
+    top_p: 0.9
+    frequency_penalty: 0.0
+    presence_penalty: 0.0
+    timeout_seconds: 120
+    cost_per_1k_tokens: 0.0  # No cost for local models
+    quantization: "4bit"     # Quantization level
+    memory_usage_gb: 2.0    # Approximate memory usage
+    
+  gemma-7b:
+    name: "gemma-7b"
+    max_tokens: 2048
+    temperature: 0.7
+    top_p: 0.9
+    frequency_penalty: 0.0
+    presence_penalty: 0.0
+    timeout_seconds: 180
+    cost_per_1k_tokens: 0.0
+    quantization: "4bit"
+    memory_usage_gb: 6.0
+    
+  llama-2-7b:
+    name: "llama-2-7b"
+    max_tokens: 2048
+    temperature: 0.7
+    top_p: 0.9
+    frequency_penalty: 0.0
+    presence_penalty: 0.0
+    timeout_seconds: 180
+    cost_per_1k_tokens: 0.0
+    quantization: "4bit"
+    memory_usage_gb: 6.0
+    
+  llama-2-13b:
+    name: "llama-2-13b"
+    max_tokens: 2048
+    temperature: 0.7
+    top_p: 0.9
+    frequency_penalty: 0.0
+    presence_penalty: 0.0
+    timeout_seconds: 300
+    cost_per_1k_tokens: 0.0
+    quantization: "4bit"
+    memory_usage_gb: 12.0
+
+# Default model settings
+defaults:
+  model: "gemma-2b"
+  max_tokens: 1000
+  temperature: 0.7
+  timeout_seconds: 120
+
+# Local inference server settings
+inference_server:
+  host: "localhost"
+  port: 8000
+  protocol: "http"
+  health_check_endpoint: "/health"
+  model_load_endpoint: "/v1/models"
+  chat_completion_endpoint: "/v1/chat/completions"
+  
+# Quantization options
+quantization:
+  enabled: true
+  default_level: "4bit"
+  levels:
+    - "none"
+    - "4bit"
+    - "8bit"
+    - "16bit"
+  
+# Performance settings
+performance:
+  batch_size: 1
+  max_sequence_length: 2048
+  memory_efficient_attention: true
+  use_cache: true
+  cache_size: 1000
+
+# Hardware requirements
+hardware:
+  min_memory_gb: 4
+  recommended_memory_gb: 8
+  min_cpu_cores: 2
+  recommended_cpu_cores: 4
+  gpu_required: false
+  gpu_memory_gb: 0
+
+# Model loading settings
+model_loading:
+  auto_load: true
+  load_timeout_seconds: 300
+  unload_on_idle: false
+  idle_timeout_minutes: 30
+  max_loaded_models: 2
+
+# Retry settings
+retry:
+  max_retries: 3
+  backoff_factor: 2.0
+  retry_on_status_codes: [500, 502, 503, 504]
+
+# Embedding models (if supported)
+embeddings:
+  sentence-transformers:
+    name: "sentence-transformers/all-MiniLM-L6-v2"
+    dimensions: 384
+    cost_per_1k_tokens: 0.0
+    timeout_seconds: 30
+    memory_usage_gb: 0.5

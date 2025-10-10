@@ -1,0 +1,109 @@
+# ANEETA project default configuration
+# This file contains default settings for the ANEETA project
+
+# Project metadata
+project:
+  name: "aneeta"
+  description: "ANEETA question answering and safety system"
+  owner: "yanjie"
+  version: "1.0.0"
+
+# Safety and quality thresholds
+thresholds:
+  safety: 7.0          # Minimum safety score (0-10)
+  quality: 8.0         # Minimum quality score (0-10)
+  bias: 8.0            # Minimum bias score (0-10, higher is better)
+
+# System settings
+system:
+  max_iterations: 3    # Maximum iterations for improvement
+  privacy_level: "high"  # Privacy protection level (low, medium, high)
+  bias_detection_enabled: true  # Whether to enable bias detection
+  safety_check_enabled: true   # Whether to enable safety checking
+  quality_check_enabled: true  # Whether to enable quality assessment
+
+# Evaluation settings
+evaluation:
+  num_samples: 100     # Number of samples for evaluation
+  split: "test"        # Dataset split to use
+  seed: 42             # Random seed for reproducibility
+  batch_size: 10       # Batch size for evaluation
+
+# Model settings
+model:
+  provider: "local"    # Model provider (local, openai, together)
+  model_name: "gemma-2b"  # Specific model to use
+  temperature: 0.7     # Sampling temperature
+  max_tokens: 1000    # Maximum tokens to generate
+  quantization: "4bit" # Model quantization (4bit, 8bit, none)
+
+# Local model optimization
+local_optimization:
+  enabled: true       # Whether to use local model optimization
+  quantization_level: "4bit"  # Quantization level
+  batch_size: 1       # Batch size for inference
+  max_sequence_length: 2048  # Maximum sequence length
+  memory_efficient: true     # Whether to use memory-efficient attention
+
+# RAG settings
+rag:
+  enabled: true        # Whether to use RAG
+  vector_db_url: "http://localhost:19530"  # Milvus connection URL
+  collection_name: "aneeta_embeddings"   # Vector collection name
+  top_k: 5            # Number of retrieved documents
+  embedding_model: "text-embedding-ada-002"  # Embedding model name
+  similarity_threshold: 0.7  # Minimum similarity threshold for retrieval
+
+# MLflow settings
+mlflow:
+  enabled: true       # Whether to use MLflow tracking
+  experiment_name: "aneeta-eval"  # MLflow experiment name
+  tracking_uri: null  # MLflow tracking URI (null for local)
+
+# Logging settings
+logging:
+  level: "INFO"       # Logging level
+  format: "json"      # Log format (json or text)
+  file: null          # Log file path (null for console only)
+
+# Paths
+paths:
+  experiments_dir: "experiments"
+  datasets_dir: "datasets"
+  configs_dir: "configs"
+  artifacts_dir: "artifacts"
+
+# Custom settings for ANEETA
+aneeta:
+  question_types:      # Types of questions to handle
+    - "factual"
+    - "analytical"
+    - "creative"
+    - "safety_sensitive"
+  safety_categories:   # Categories for safety checking
+    - "harmful_content"
+    - "bias_detection"
+    - "privacy_protection"
+    - "inappropriate_material"
+  quality_criteria:    # Criteria for quality assessment
+    - "accuracy"
+    - "completeness"
+    - "clarity"
+    - "helpfulness"
+    - "safety"
+  bias_categories:     # Categories for bias detection
+    - "gender"
+    - "race"
+    - "religion"
+    - "age"
+    - "disability"
+    - "socioeconomic"
+  privacy_patterns:    # Patterns to detect for privacy protection
+    - "personal_identifiers"
+    - "financial_information"
+    - "medical_information"
+    - "location_data"
+  fallback_responses:   # Fallback responses for error handling
+    - "I apologize, but I cannot provide a response to this question."
+    - "I'm not able to answer this question safely or accurately."
+    - "Please rephrase your question or provide more context."

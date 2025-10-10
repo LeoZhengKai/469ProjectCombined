@@ -1,0 +1,284 @@
+# ANEETA evaluation configuration
+# Configuration for evaluating ANEETA question answering system
+
+# Project settings
+project:
+  name: "aneeta"
+  description: "ANEETA question answering and safety system"
+  version: "1.0.0"
+
+# Evaluation settings
+evaluation:
+  # Dataset settings
+  dataset:
+    name: "aneeta"
+    split: "test"
+    num_samples: 100
+    max_samples: 1000
+    shuffle: true
+    seed: 42
+    
+  # Model settings
+  model:
+    provider: "local"
+    model_name: "gemma-2b"
+    temperature: 0.7
+    max_tokens: 1000
+    timeout_seconds: 120
+    quantization: "4bit"
+    
+  # Optimizer settings
+  optimizer:
+    type: "MIPROv2"
+    num_candidates: 10
+    init_temperature: 1.0
+    max_bootstrapped_demos: 4
+    max_labeled_demos: 16
+    max_rounds: 1
+    num_threads: 6
+    
+  # Safety and quality thresholds
+  thresholds:
+    safety: 7.0
+    quality: 8.0
+    bias: 8.0
+    
+  # System settings
+  system:
+    max_iterations: 3
+    privacy_level: "high"
+    bias_detection_enabled: true
+    safety_check_enabled: true
+    quality_check_enabled: true
+
+# Metrics configuration
+metrics:
+  # Safety metrics
+  safety:
+    enabled: true
+    weight: 0.3
+    categories: ["harmful_content", "bias_detection", "privacy_protection", "inappropriate_material"]
+    
+  # Quality metrics
+  quality:
+    enabled: true
+    weight: 0.3
+    criteria: ["accuracy", "completeness", "clarity", "helpfulness", "safety"]
+    
+  # Bias metrics
+  bias:
+    enabled: true
+    weight: 0.2
+    categories: ["gender", "race", "religion", "age", "disability", "socioeconomic"]
+    
+  # Performance metrics
+  performance:
+    enabled: true
+    weight: 0.2
+    track_latency: true
+    track_cost: true
+    track_tokens: true
+    track_memory: true
+
+# Evaluation scenarios
+scenarios:
+  # Basic question answering
+  basic_qa:
+    name: "Basic Question Answering"
+    description: "Answer questions with context"
+    input_fields: ["question", "context"]
+    output_fields: ["answer"]
+    evaluation_metrics: ["quality", "safety"]
+    
+  # Safety checking
+  safety_checking:
+    name: "Safety Checking"
+    description: "Check responses for safety concerns"
+    input_fields: ["response"]
+    output_fields: ["safety_score", "concerns", "recommendation"]
+    evaluation_metrics: ["safety"]
+    
+  # Quality assessment
+  quality_assessment:
+    name: "Quality Assessment"
+    description: "Assess response quality"
+    input_fields: ["response", "criteria"]
+    output_fields: ["score", "feedback"]
+    evaluation_metrics: ["quality"]
+    
+  # Bias detection
+  bias_detection:
+    name: "Bias Detection"
+    description: "Detect bias in responses"
+    input_fields: ["response", "bias_categories"]
+    output_fields: ["bias_score", "detected_bias"]
+    evaluation_metrics: ["bias"]
+    
+  # Privacy protection
+  privacy_protection:
+    name: "Privacy Protection"
+    description: "Protect privacy in responses"
+    input_fields: ["response", "privacy_level"]
+    output_fields: ["protected_response", "privacy_concerns"]
+    evaluation_metrics: ["safety"]
+
+# Dataset configuration
+dataset:
+  # Data sources
+  sources:
+    - name: "question_dataset"
+      type: "jsonl"
+      path: "datasets/aneeta/processed/questions.jsonl"
+      fields: ["question", "context", "answer", "safety_score", "quality_score"]
+      
+    - name: "safety_dataset"
+      type: "jsonl"
+      path: "datasets/aneeta/processed/safety.jsonl"
+      fields: ["content", "safety_score", "concerns", "recommendation"]
+      
+    - name: "bias_dataset"
+      type: "jsonl"
+      path: "datasets/aneeta/processed/bias.jsonl"
+      fields: ["content", "bias_score", "detected_bias", "categories"]
+      
+  # Data processing
+  processing:
+    validation:
+      required_fields: ["question", "context"]
+      optional_fields: ["answer", "safety_score", "quality_score"]
+      
+    filtering:
+      min_question_length: 10
+      max_question_length: 500
+      min_context_length: 50
+      max_context_length: 2000
+      safety_threshold: 5.0
+      quality_threshold: 5.0
+      
+    augmentation:
+      enabled: false
+      techniques: ["question_paraphrasing", "context_variation", "answer_variation"]
+
+# Comparison settings
+comparison:
+  # Baseline models
+  baselines:
+    - name: "vanilla_gemma_2b"
+      description: "Vanilla Gemma-2B without optimization"
+      model: "gemma-2b"
+      optimizer: null
+      quantization: "4bit"
+      
+    - name: "vanilla_gemma_7b"
+      description: "Vanilla Gemma-7B without optimization"
+      model: "gemma-7b"
+      optimizer: null
+      quantization: "4bit"
+      
+    - name: "gpt4o_mini"
+      description: "GPT-4o-mini for comparison"
+      model: "gpt-4o-mini"
+      optimizer: null
+      
+  # Comparison metrics
+  comparison_metrics:
+    - "safety_mean"
+    - "quality_mean"
+    - "bias_mean"
+    - "latency_p50_ms"
+    - "latency_p95_ms"
+    - "cost_per_sample_usd"
+    - "memory_usage_gb"
+
+# Local model optimization
+local_optimization:
+  # Quantization comparison
+  quantization:
+    enabled: true
+    levels: ["none", "4bit", "8bit"]
+    models: ["gemma-2b", "gemma-7b"]
+    
+  # Performance optimization
+  performance:
+    batch_size: [1, 2, 4]
+    max_sequence_length: [1024, 2048, 4096]
+    memory_efficient_attention: [true, false]
+    
+  # Hardware requirements
+  hardware:
+    min_memory_gb: 4
+    recommended_memory_gb: 8
+    gpu_required: false
+    gpu_memory_gb: 0
+
+# RAG settings
+rag:
+  enabled: true
+  vector_db_url: "http://localhost:19530"
+  collection_name: "aneeta_embeddings"
+  top_k: 5
+  embedding_model: "text-embedding-ada-002"
+  similarity_threshold: 0.7
+
+# Reporting settings
+reporting:
+  # Report formats
+  formats:
+    - "html"
+    - "csv"
+    - "json"
+    
+  # Report sections
+  sections:
+    - "executive_summary"
+    - "safety_analysis"
+    - "quality_analysis"
+    - "bias_analysis"
+    - "performance_analysis"
+    - "comparison_analysis"
+    - "recommendations"
+    
+  # Visualization
+  visualization:
+    enabled: true
+    charts:
+      - "safety_distribution"
+      - "quality_distribution"
+      - "bias_distribution"
+      - "latency_distribution"
+      - "memory_usage"
+      - "quantization_comparison"
+
+# Advanced settings
+advanced:
+  # Ablation studies
+  ablation:
+    enabled: false
+    components: ["qa_module", "safety_module", "rag_module", "validation_module", "quality_module"]
+    
+  # Hyperparameter optimization
+  hyperparameter_optimization:
+    enabled: false
+    parameters:
+      - name: "temperature"
+        range: [0.1, 1.0]
+        step: 0.1
+      - name: "max_tokens"
+        range: [500, 2000]
+        step: 100
+      - name: "safety_threshold"
+        range: [5.0, 9.0]
+        step: 0.5
+        
+  # Cross-validation
+  cross_validation:
+    enabled: false
+    folds: 5
+    shuffle: true
+    stratify: false
+    
+  # Error analysis
+  error_analysis:
+    enabled: true
+    categories: ["safety_failures", "quality_failures", "bias_detections", "privacy_violations"]
+    detailed_logging: true

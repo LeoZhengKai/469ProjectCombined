@@ -1,0 +1,216 @@
+# SharkTank evaluation configuration
+# Configuration for evaluating SharkTank pitch generation
+
+# Project settings
+project:
+  name: "sharktank"
+  description: "SharkTank pitch generation and evaluation"
+  version: "1.0.0"
+
+# Evaluation settings
+evaluation:
+  # Dataset settings
+  dataset:
+    name: "sharktank"
+    split: "test"
+    num_samples: 100
+    max_samples: 1000
+    shuffle: true
+    seed: 42
+    
+  # Model settings
+  model:
+    provider: "openai"
+    model_name: "gpt-4o-mini"
+    temperature: 0.7
+    max_tokens: 1000
+    timeout_seconds: 30
+    
+  # Optimizer settings
+  optimizer:
+    type: "BootstrapFewShot"
+    max_bootstrapped_demos: 4
+    max_labeled_demos: 16
+    max_rounds: 1
+    num_threads: 6
+    patience: 5
+    
+  # Quality thresholds
+  thresholds:
+    quality: 8.0
+    fact: 8.5
+    safety: 7.0
+    
+  # Refinement settings
+  refinement:
+    max_iterations: 3
+    quality_improvement_threshold: 0.5
+    fact_improvement_threshold: 0.3
+    early_stopping: true
+
+# Metrics configuration
+metrics:
+  # Quality metrics
+  quality:
+    enabled: true
+    weight: 0.4
+    criteria: ["clarity", "persuasiveness", "market_opportunity", "business_model", "financial_projections"]
+    
+  # Factuality metrics
+  factuality:
+    enabled: true
+    weight: 0.3
+    fact_checker: "llm_judge"
+    source_validation: true
+    
+  # Safety metrics
+  safety:
+    enabled: true
+    weight: 0.2
+    categories: ["harmful_content", "bias_detection", "inappropriate_material"]
+    
+  # Performance metrics
+  performance:
+    enabled: true
+    weight: 0.1
+    track_latency: true
+    track_cost: true
+    track_tokens: true
+
+# Evaluation scenarios
+scenarios:
+  # Basic pitch generation
+  basic_pitch:
+    name: "Basic Pitch Generation"
+    description: "Generate pitches from product facts"
+    input_fields: ["product_facts", "guidelines"]
+    output_fields: ["pitch"]
+    evaluation_metrics: ["quality", "factuality"]
+    
+  # Fact-checking
+  fact_checking:
+    name: "Fact-Checking"
+    description: "Check factual accuracy of pitches"
+    input_fields: ["pitch", "product_facts"]
+    output_fields: ["score", "issues"]
+    evaluation_metrics: ["factuality"]
+    
+  # Quality assessment
+  quality_assessment:
+    name: "Quality Assessment"
+    description: "Assess pitch quality"
+    input_fields: ["pitch", "criteria"]
+    output_fields: ["score", "feedback"]
+    evaluation_metrics: ["quality"]
+    
+  # Refinement
+  refinement:
+    name: "Pitch Refinement"
+    description: "Refine pitches based on feedback"
+    input_fields: ["original_pitch", "feedback"]
+    output_fields: ["refined_pitch"]
+    evaluation_metrics: ["quality", "factuality"]
+
+# Dataset configuration
+dataset:
+  # Data sources
+  sources:
+    - name: "product_database"
+      type: "json"
+      path: "datasets/sharktank/processed/products.json"
+      fields: ["name", "description", "market", "revenue", "team"]
+      
+    - name: "pitch_examples"
+      type: "jsonl"
+      path: "datasets/sharktank/processed/pitches.jsonl"
+      fields: ["product_facts", "guidelines", "pitch", "quality_score", "fact_score"]
+      
+  # Data processing
+  processing:
+    validation:
+      required_fields: ["product_facts", "guidelines"]
+      optional_fields: ["pitch", "quality_score", "fact_score"]
+      
+    filtering:
+      min_pitch_length: 100
+      max_pitch_length: 2000
+      quality_threshold: 6.0
+      fact_threshold: 6.0
+      
+    augmentation:
+      enabled: false
+      techniques: ["paraphrasing", "fact_variation", "guideline_variation"]
+
+# Comparison settings
+comparison:
+  # Baseline models
+  baselines:
+    - name: "vanilla_gpt4o_mini"
+      description: "Vanilla GPT-4o-mini without optimization"
+      model: "gpt-4o-mini"
+      optimizer: null
+      
+    - name: "vanilla_gpt4o"
+      description: "Vanilla GPT-4o without optimization"
+      model: "gpt-4o"
+      optimizer: null
+      
+  # Comparison metrics
+  comparison_metrics:
+    - "quality_mean"
+    - "fact_mean"
+    - "latency_p50_ms"
+    - "latency_p95_ms"
+    - "cost_per_sample_usd"
+    - "improvement_efficiency_mean"
+
+# Reporting settings
+reporting:
+  # Report formats
+  formats:
+    - "html"
+    - "csv"
+    - "json"
+    
+  # Report sections
+  sections:
+    - "executive_summary"
+    - "detailed_results"
+    - "comparison_analysis"
+    - "error_analysis"
+    - "recommendations"
+    
+  # Visualization
+  visualization:
+    enabled: true
+    charts:
+      - "quality_distribution"
+      - "factuality_distribution"
+      - "latency_distribution"
+      - "cost_analysis"
+      - "improvement_trends"
+
+# Advanced settings
+advanced:
+  # Ablation studies
+  ablation:
+    enabled: false
+    components: ["draft_module", "fact_check_module", "quality_module", "refinement_module"]
+    
+  # Hyperparameter optimization
+  hyperparameter_optimization:
+    enabled: false
+    parameters:
+      - name: "temperature"
+        range: [0.1, 1.0]
+        step: 0.1
+      - name: "max_tokens"
+        range: [500, 2000]
+        step: 100
+        
+  # Cross-validation
+  cross_validation:
+    enabled: false
+    folds: 5
+    shuffle: true
+    stratify: false

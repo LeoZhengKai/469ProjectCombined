@@ -1,0 +1,166 @@
+# RAG (Retrieval-Augmented Generation) configuration
+# Configuration for vector database and retrieval settings
+
+# RAG system settings
+rag:
+  enabled: false       # Whether to use RAG
+  provider: "milvus"   # Vector database provider (milvus, chroma, pinecone)
+  
+# Vector database configuration
+vector_db:
+  provider: "milvus"
+  host: "localhost"
+  port: 19530
+  database: "default"
+  collection_prefix: "dspy_"
+  
+  # Connection settings
+  connection:
+    timeout: 30
+    max_retries: 3
+    retry_delay: 1.0
+    
+  # Collection settings
+  collection:
+    auto_create: true
+    auto_drop: false
+    description: "DSPy evaluation embeddings"
+    
+  # Index settings
+  index:
+    type: "IVF_FLAT"
+    metric_type: "COSINE"
+    params:
+      nlist: 1024
+      
+  # Search settings
+  search:
+    top_k: 5
+    score_threshold: 0.7
+    timeout: 10
+
+# Embedding configuration
+embeddings:
+  provider: "openai"  # Embedding provider (openai, sentence-transformers, etc.)
+  model: "text-embedding-ada-002"
+  dimensions: 1536
+  batch_size: 100
+  max_retries: 3
+  timeout_seconds: 30
+  
+  # Model-specific settings
+  openai:
+    api_key_env: "OPENAI_API_KEY"
+    base_url: "https://api.openai.com/v1"
+    cost_per_1k_tokens: 0.0001
+    
+  sentence_transformers:
+    model_name: "all-MiniLM-L6-v2"
+    device: "cpu"  # cpu, cuda, auto
+    normalize_embeddings: true
+
+# Document processing
+document_processing:
+  chunk_size: 1000
+  chunk_overlap: 200
+  chunking_strategy: "recursive"  # recursive, fixed, semantic
+  
+  # Text preprocessing
+  preprocessing:
+    remove_whitespace: true
+    remove_special_chars: false
+    lowercase: false
+    remove_stopwords: false
+    
+  # Metadata extraction
+  metadata:
+    extract_title: true
+    extract_author: false
+    extract_date: false
+    extract_source: true
+    custom_fields: []
+
+# Retrieval settings
+retrieval:
+  # Query processing
+  query_processing:
+    expand_query: false
+    query_rewriting: false
+    query_filtering: false
+    
+  # Re-ranking
+  reranking:
+    enabled: false
+    model: "cross-encoder/ms-marco-MiniLM-L-6-v2"
+    top_k: 20
+    rerank_top_k: 5
+    
+  # Context construction
+  context_construction:
+    max_context_length: 4000
+    context_format: "concatenated"  # concatenated, structured, template
+    include_metadata: true
+    include_scores: false
+
+# Performance settings
+performance:
+  # Caching
+  cache:
+    enabled: true
+    cache_size: 1000
+    ttl_seconds: 3600
+    
+  # Batch processing
+  batch_processing:
+    enabled: true
+    batch_size: 50
+    max_concurrent_batches: 5
+    
+  # Async processing
+  async_processing:
+    enabled: true
+    max_concurrent_requests: 10
+    queue_size: 100
+
+# Monitoring and logging
+monitoring:
+  # Metrics collection
+  metrics:
+    enabled: true
+    collection_interval: 60  # seconds
+    export_format: "prometheus"  # prometheus, json, csv
+    
+  # Logging
+  logging:
+    level: "INFO"
+    log_queries: true
+    log_retrievals: true
+    log_performance: true
+
+# Security settings
+security:
+  # Access control
+  access_control:
+    enabled: false
+    authentication_required: false
+    authorization_required: false
+    
+  # Data privacy
+  privacy:
+    anonymize_queries: false
+    log_retention_days: 30
+    data_encryption: false
+
+# Backup and recovery
+backup:
+  enabled: false
+  backup_interval_hours: 24
+  backup_retention_days: 7
+  backup_location: "backups/rag"
+  
+# Development settings
+development:
+  debug_mode: false
+  verbose_logging: false
+  test_mode: false
+  mock_embeddings: false

@@ -1,0 +1,111 @@
+# Base configuration for DSPy evaluation framework
+# This file contains shared defaults used across all projects
+
+# Global settings
+global:
+  version: "1.0.0"
+  environment: "development"  # development, staging, production
+  debug: false
+
+# Quality and safety thresholds
+thresholds:
+  quality: 8.0          # Minimum quality score (0-10)
+  fact: 8.5            # Minimum factuality score (0-10)
+  safety: 7.0          # Minimum safety score (0-10)
+  bias: 8.0            # Minimum bias score (0-10, higher is better)
+
+# Evaluation settings
+evaluation:
+  num_samples: 100     # Number of samples for evaluation
+  split: "test"        # Dataset split to use
+  seed: 42             # Random seed for reproducibility
+  batch_size: 10       # Batch size for evaluation
+  max_retries: 3       # Maximum retries for failed evaluations
+  timeout_seconds: 300  # Timeout for evaluation runs
+
+# Model settings
+model:
+  provider: "openai"   # Model provider (openai, together, local)
+  model_name: "gpt-4o-mini"  # Specific model to use
+  temperature: 0.7     # Sampling temperature
+  max_tokens: 1000    # Maximum tokens to generate
+  timeout_seconds: 30 # Model request timeout
+
+# Optimizer settings
+optimizer:
+  type: "BootstrapFewShot"  # Default optimizer type
+  max_bootstrapped_demos: 4  # Maximum bootstrapped demonstrations
+  max_labeled_demos: 16     # Maximum labeled demonstrations
+  max_rounds: 1            # Maximum optimization rounds
+  num_threads: 6           # Number of threads for parallel processing
+  patience: 5              # Early stopping patience
+
+# RAG settings
+rag:
+  enabled: false       # Whether to use RAG
+  vector_db_url: "http://localhost:19530"  # Milvus connection URL
+  collection_name: "embeddings"  # Vector collection name
+  top_k: 5            # Number of retrieved documents
+  embedding_model: "text-embedding-ada-002"  # Embedding model name
+  similarity_threshold: 0.7  # Minimum similarity threshold for retrieval
+  max_context_length: 4000  # Maximum context length for retrieved documents
+
+# MLflow settings
+mlflow:
+  enabled: true       # Whether to use MLflow tracking
+  experiment_name: "dspy-eval"  # MLflow experiment name
+  tracking_uri: null  # MLflow tracking URI (null for local)
+  artifact_location: "mlruns"  # Artifact storage location
+  run_name_prefix: "eval"  # Prefix for run names
+
+# Logging settings
+logging:
+  level: "INFO"       # Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+  format: "json"      # Log format (json, text)
+  file: null          # Log file path (null for console only)
+  max_file_size: "10MB"  # Maximum log file size
+  backup_count: 5     # Number of backup log files
+
+# Paths
+paths:
+  experiments_dir: "experiments"
+  datasets_dir: "datasets"
+  configs_dir: "configs"
+  artifacts_dir: "artifacts"
+  logs_dir: "logs"
+  temp_dir: "temp"
+
+# Performance settings
+performance:
+  max_concurrent_evaluations: 5  # Maximum concurrent evaluation runs
+  memory_limit_mb: 4096          # Memory limit for evaluation processes
+  cpu_limit_percent: 80         # CPU limit for evaluation processes
+  disk_space_limit_gb: 10       # Disk space limit for artifacts
+
+# Security settings
+security:
+  api_key_required: false       # Whether API key is required
+  rate_limit_per_minute: 100   # Rate limit for API requests
+  allowed_origins: ["*"]        # Allowed CORS origins
+  max_request_size_mb: 10      # Maximum request size
+
+# Monitoring settings
+monitoring:
+  health_check_interval: 30    # Health check interval in seconds
+  metrics_collection: true     # Whether to collect metrics
+  alerting_enabled: false      # Whether to enable alerting
+  alert_webhook_url: null      # Webhook URL for alerts
+
+# Backup settings
+backup:
+  enabled: false               # Whether to enable automatic backups
+  backup_interval_hours: 24   # Backup interval in hours
+  backup_retention_days: 30   # Backup retention period in days
+  backup_location: "backups"  # Backup storage location
+
+# Development settings
+development:
+  hot_reload: true            # Whether to enable hot reload
+  debug_mode: false           # Whether to enable debug mode
+  profiling_enabled: false    # Whether to enable profiling
+  test_mode: false            # Whether to run in test mode

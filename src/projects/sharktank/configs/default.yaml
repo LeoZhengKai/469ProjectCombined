@@ -1,0 +1,90 @@
+# SharkTank project default configuration
+# This file contains default settings for the SharkTank project
+
+# Project metadata
+project:
+  name: "sharktank"
+  description: "SharkTank pitch generation and evaluation"
+  owner: "zhengkai"
+  version: "1.0.0"
+
+# Quality thresholds
+thresholds:
+  quality: 8.0          # Minimum quality score (0-10)
+  fact: 8.5            # Minimum factuality score (0-10)
+  safety: 7.0          # Minimum safety score (0-10)
+
+# Refinement settings
+refinement:
+  max_iterations: 3     # Maximum refinement iterations
+  quality_improvement_threshold: 0.5  # Minimum improvement per iteration
+  fact_improvement_threshold: 0.3     # Minimum factuality improvement per iteration
+
+# Evaluation settings
+evaluation:
+  num_samples: 100     # Number of samples for evaluation
+  split: "test"        # Dataset split to use
+  seed: 42             # Random seed for reproducibility
+  batch_size: 10       # Batch size for evaluation
+
+# Model settings
+model:
+  provider: "openai"    # Model provider
+  model_name: "gpt-4o-mini"  # Specific model to use
+  temperature: 0.7     # Sampling temperature
+  max_tokens: 1000    # Maximum tokens to generate
+
+# Optimizer settings
+optimizer:
+  type: "BootstrapFewShot"  # Optimizer type
+  max_bootstrapped_demos: 4  # Maximum bootstrapped demonstrations
+  max_labeled_demos: 16     # Maximum labeled demonstrations
+  max_rounds: 1            # Maximum optimization rounds
+  num_threads: 6           # Number of threads for parallel processing
+
+# RAG settings (if enabled)
+rag:
+  enabled: false       # Whether to use RAG
+  vector_db_url: "http://localhost:19530"  # Milvus connection URL
+  collection_name: "sharktank_embeddings"  # Vector collection name
+  top_k: 5            # Number of retrieved documents
+  embedding_model: "text-embedding-ada-002"  # Embedding model name
+
+# MLflow settings
+mlflow:
+  enabled: true       # Whether to use MLflow tracking
+  experiment_name: "sharktank-eval"  # MLflow experiment name
+  tracking_uri: null  # MLflow tracking URI (null for local)
+
+# Logging settings
+logging:
+  level: "INFO"       # Logging level
+  format: "json"      # Log format (json or text)
+  file: null          # Log file path (null for console only)
+
+# Paths
+paths:
+  experiments_dir: "experiments"
+  datasets_dir: "datasets"
+  configs_dir: "configs"
+  artifacts_dir: "artifacts"
+
+# Custom settings for SharkTank
+sharktank:
+  pitch_length: "medium"    # Pitch length (short, medium, long)
+  focus_areas:              # Areas to focus on in pitches
+    - "market_opportunity"
+    - "business_model"
+    - "financial_projections"
+    - "competitive_advantage"
+  investor_criteria:        # Criteria for investor evaluation
+    - "clarity"
+    - "persuasiveness"
+    - "market_size"
+    - "business_model_clarity"
+    - "financial_realism"
+  fact_check_sources:       # Sources for fact-checking
+    - "product_documentation"
+    - "market_research"
+    - "financial_data"
+    - "competitive_analysis"
